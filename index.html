@@ -3,100 +3,109 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fuel Gauge</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Fuel Gauge"/>
   <meta name="theme-color" content="#0a0a0a"/>
+  <title>Fuel Gauge</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { color-scheme: dark; }
-    html { background: #0a0a0a; }
-    body { background: #0a0a0a; color: #eee; font-family: 'DM Sans', sans-serif; min-height: 100vh; }
-    h1 { color: #eee; }
-    .new-cycle-btn { color: #555; }
-    .wrap { max-width: 480px; margin: 0 auto; padding: 36px 16px 60px; }
+    html, body { background: #0a0a0a; }
+    body {
+      color: #eee;
+      font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .wrap { max-width: 480px; margin: 0 auto; padding: 52px 16px 80px; }
 
 ```
-h1 { font-size: 26px; font-weight: 300; color: #eee; letter-spacing: -0.5px; }
-h1 span { color: #4cc9f0; font-weight: 500; }
-
-.label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 4px; color: #444; margin-bottom: 5px; }
-.card { background: #111; border-radius: 16px; padding: 20px; border: 1px solid #1e1e1e; margin-bottom: 14px; }
-
 /* Header */
 .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; }
-.new-cycle-btn { background: none; border: 1px solid #2a2a2a; border-radius: 8px; padding: 7px 13px; color: #444; font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
-.new-cycle-btn.confirm { border-color: #ff6b6b; color: #ff6b6b; background: #ff6b6b22; }
+.cycle-label { font-family: 'SF Mono', monospace; font-size: 10px; letter-spacing: 4px; color: #444; margin-bottom: 5px; }
+h1 { font-size: 26px; font-weight: 300; color: #eee; letter-spacing: -0.5px; }
+h1 span { color: #4cc9f0; font-weight: 500; }
+.new-cycle-btn {
+  background: none; border: 1px solid #2a2a2a; border-radius: 8px;
+  padding: 7px 13px; color: #444; font-size: 11px;
+  font-family: 'SF Mono', monospace; letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
+}
+.new-cycle-btn.confirm { border-color: #ff6b6b; color: #ff6b6b; background: #ff6b6b18; }
+
+/* Cards */
+.card { background: #111; border-radius: 16px; padding: 20px; border: 1px solid #1e1e1e; margin-bottom: 14px; }
 
 /* Gauges */
 .gauge { margin-bottom: 22px; }
 .gauge:last-child { margin-bottom: 6px; }
 .gauge-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
-.gauge-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #888; }
-.gauge-val { font-family: 'DM Mono', monospace; }
-.gauge-val .current { font-size: 20px; font-weight: 700; }
-.gauge-val .target { font-size: 13px; color: #555; }
+.gauge-lbl { font-family: 'SF Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #888; }
+.gauge-nums { font-family: 'SF Mono', monospace; }
+.gauge-cur { font-size: 20px; font-weight: 700; }
+.gauge-tgt { font-size: 13px; color: #555; }
 .gauge-bar { display: flex; gap: 3px; }
-.gauge-seg { flex: 1; height: 10px; border-radius: 3px; background: #1e1e1e; border: 1px solid #2a2a2a; transition: background 0.2s; }
-.gauge-seg.filled { border-color: transparent; }
-.gauge-remaining { margin-top: 5px; font-family: 'DM Mono', monospace; font-size: 11px; color: #555; }
+.seg { flex: 1; height: 10px; border-radius: 3px; background: #1e1e1e; border: 1px solid #2a2a2a; }
+.seg.on { border-color: transparent; }
+.gauge-sub { margin-top: 5px; font-family: 'SF Mono', monospace; font-size: 11px; color: #555; }
 
 /* Tabs */
 .tabs { display: flex; gap: 6px; margin-bottom: 14px; }
-.tab-btn { background: none; border: 1px solid transparent; border-radius: 8px; padding: 7px 14px; color: #555; font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
-.tab-btn.active { background: #1e1e1e; border-color: #333; color: #eee; }
+.tab { background: none; border: 1px solid transparent; border-radius: 8px; padding: 7px 14px; color: #555; font-size: 11px; font-family: 'SF Mono', monospace; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
+.tab.active { background: #1e1e1e; border-color: #333; color: #eee; }
 
-/* Input row */
-.input-row { display: flex; gap: 8px; margin-bottom: 8px; }
-input[type=text], input[type=password] {
+/* Inputs */
+.row { display: flex; gap: 8px; margin-bottom: 8px; }
+input {
   flex: 1; background: #181818; border: 1px solid #2a2a2a; border-radius: 10px;
-  padding: 11px 13px; color: #eee; font-size: 14px; outline: none;
-  font-family: 'DM Sans', sans-serif; width: 100%;
-  -webkit-appearance: none; appearance: none;
+  padding: 11px 13px; color: #eee; font-size: 15px; outline: none;
+  font-family: -apple-system, sans-serif; -webkit-appearance: none; appearance: none;
+  -webkit-text-fill-color: #eee;
 }
-input:-webkit-autofill,
-input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px #181818 inset !important;
-  -webkit-text-fill-color: #eee !important;
-  caret-color: #eee;
-}
-input::placeholder { color: #444; }
-.add-btn { background: #4cc9f0; border: none; border-radius: 10px; padding: 11px 16px; color: #000; font-weight: 600; font-size: 14px; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
-.add-btn:disabled { background: #1e1e1e; color: #555; cursor: default; }
-.save-btn { background: #4cc9f022; border: 1px solid #4cc9f044; border-radius: 7px; padding: 5px 10px; color: #4cc9f0; font-size: 11px; font-family: 'DM Mono', monospace; cursor: pointer; }
-.remove-btn { background: none; border: none; color: #444; cursor: pointer; font-size: 18px; padding: 4px 8px; border-radius: 6px; transition: color 0.2s; line-height: 1; }
-.remove-btn:hover { color: #ff6b6b; }
-.icon-btn { background: none; border: 1px solid #2a2a2a; border-radius: 10px; padding: 11px 13px; color: #555; cursor: pointer; font-size: 13px; }
+input::placeholder { color: #3a3a3a; -webkit-text-fill-color: #3a3a3a; }
+input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #181818 inset !important; -webkit-text-fill-color: #eee !important; }
+
+.btn-add { background: #4cc9f0; border: none; border-radius: 10px; padding: 11px 16px; color: #000; font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+.btn-add:disabled { background: #1e1e1e; color: #555; cursor: default; }
+.btn-icon { background: none; border: 1px solid #2a2a2a; border-radius: 10px; padding: 11px 13px; color: #555; cursor: pointer; font-size: 14px; -webkit-tap-highlight-color: transparent; }
+.btn-save { background: #4cc9f022; border: 1px solid #4cc9f044; border-radius: 7px; padding: 5px 10px; color: #4cc9f0; font-size: 11px; font-family: 'SF Mono', monospace; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.btn-remove { background: none; border: none; color: #3a3a3a; cursor: pointer; font-size: 20px; padding: 4px 8px; line-height: 1; -webkit-tap-highlight-color: transparent; transition: color 0.15s; }
+.btn-remove:active { color: #ff6b6b; }
+.btn-text { background: none; border: 1px solid #2a2a2a; border-radius: 10px; padding: 10px 14px; color: #555; font-size: 11px; font-family: 'SF Mono', monospace; cursor: pointer; }
 
 /* Toggle */
-.toggle-row { display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 10px; }
-.toggle { width: 32px; height: 18px; border-radius: 9px; background: #1e1e1e; border: 1px solid #333; position: relative; transition: all 0.2s; flex-shrink: 0; }
-.toggle.on { background: #52b788; border-color: #52b788; }
-.toggle-knob { position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: #555; transition: left 0.2s; }
-.toggle.on .toggle-knob { left: 14px; background: #fff; }
-.toggle-label { font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 1px; color: #555; transition: color 0.2s; }
-.toggle-label.on { color: #52b788; }
+.toggle-row { display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 10px; -webkit-tap-highlight-color: transparent; }
+.tog { width: 34px; height: 20px; border-radius: 10px; background: #1e1e1e; border: 1px solid #333; position: relative; transition: all 0.2s; flex-shrink: 0; }
+.tog.on { background: #52b788; border-color: #52b788; }
+.tog-knob { position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: #555; transition: left 0.2s, background 0.2s; }
+.tog.on .tog-knob { left: 17px; background: #fff; }
+.tog-label { font-size: 11px; font-family: 'SF Mono', monospace; letter-spacing: 1px; color: #555; transition: color 0.2s; }
+.tog-label.on { color: #52b788; }
 
 /* Error */
-.error { font-size: 11px; color: #ff6b6b; font-family: 'DM Mono', monospace; word-break: break-all; line-height: 1.5; margin-bottom: 10px; }
+.err { font-size: 11px; color: #ff6b6b; font-family: 'SF Mono', monospace; word-break: break-all; line-height: 1.5; margin-bottom: 10px; display: none; }
 
-/* Log entries */
-.log-divider { border-top: 1px solid #1a1a1a; padding-top: 12px; margin-top: 4px; }
-.section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; color: #444; margin-bottom: 10px; }
+/* Log */
+.divider { border-top: 1px solid #1a1a1a; padding-top: 12px; margin-top: 4px; }
+.sec-label { font-family: 'SF Mono', monospace; font-size: 10px; letter-spacing: 3px; color: #444; margin-bottom: 10px; }
 .entry { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #181818; }
-.entry-bar { width: 3px; height: 32px; border-radius: 2px; flex-shrink: 0; }
+.entry-bar { width: 3px; height: 34px; border-radius: 2px; flex-shrink: 0; }
 .entry-info { flex: 1; min-width: 0; }
-.entry-name { font-size: 13px; color: #ddd; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.entry-meta { font-size: 11px; color: #555; font-family: 'DM Mono', monospace; margin-top: 1px; }
-.totals-row { display: flex; justify-content: flex-end; gap: 16px; padding-top: 10px; font-family: 'DM Mono', monospace; font-size: 11px; color: #555; }
-
-.empty { color: #333; font-size: 12px; text-align: center; padding: 16px 0; font-family: 'DM Mono', monospace; line-height: 1.8; }
+.entry-name { font-size: 14px; color: #ddd; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-meta { font-size: 11px; color: #555; font-family: 'SF Mono', monospace; margin-top: 2px; }
+.totals { display: flex; justify-content: flex-end; gap: 16px; padding-top: 10px; font-family: 'SF Mono', monospace; font-size: 11px; color: #555; }
+.empty { color: #2a2a2a; font-size: 12px; text-align: center; padding: 20px 0; font-family: 'SF Mono', monospace; line-height: 1.8; }
 
 /* Settings */
-.settings-label { font-size: 12px; font-family: 'DM Mono', monospace; color: #888; margin-bottom: 8px; letter-spacing: 1px; }
-.key-saved { flex: 1; background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; padding: 10px 13px; font-size: 13px; color: #52b788; font-family: 'DM Mono', monospace; }
-.hint { font-size: 11px; color: #444; font-family: 'DM Mono', monospace; line-height: 1.8; margin-top: 8px; }
-.footer { margin-top: 14px; text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; color: #1e1e1e; letter-spacing: 2px; }
+.set-label { font-size: 12px; font-family: 'SF Mono', monospace; color: #666; margin-bottom: 8px; letter-spacing: 1px; }
+.key-ok { flex: 1; background: #181818; border: 1px solid #1e1e1e; border-radius: 10px; padding: 10px 13px; font-size: 13px; color: #52b788; font-family: 'SF Mono', monospace; }
+.hint { font-size: 11px; color: #3a3a3a; font-family: 'SF Mono', monospace; line-height: 1.8; margin-top: 8px; }
+.hint a { color: #4cc9f055; }
+.set-section { margin-bottom: 24px; }
+
+.footer { margin-top: 14px; text-align: center; font-family: 'SF Mono', monospace; font-size: 10px; color: #1a1a1a; letter-spacing: 2px; }
 ```
 
   </style>
@@ -104,335 +113,311 @@ input::placeholder { color: #444; }
 <body>
 <div class="wrap">
 
-  <!-- Header -->
-
   <div class="header">
     <div>
-      <div class="label">DINNER → DINNER CYCLE</div>
+      <div class="cycle-label">DINNER → DINNER CYCLE</div>
       <h1>Fuel <span>Gauge</span></h1>
     </div>
     <button class="new-cycle-btn" id="resetBtn">NEW CYCLE</button>
   </div>
 
-  <!-- Gauges -->
-
-  <div class="card" style="padding: 22px 22px 14px;">
+  <div class="card" style="padding:22px 22px 14px;" id="gaugeCard">
     <div class="gauge" id="calGauge"></div>
     <div class="gauge" id="proGauge"></div>
   </div>
 
-  <!-- Tabs -->
-
   <div class="tabs">
-    <button class="tab-btn active" data-tab="log">LOG</button>
-    <button class="tab-btn" data-tab="saved">SAVED</button>
-    <button class="tab-btn" data-tab="settings">SETTINGS</button>
+    <button class="tab active" data-tab="log">LOG</button>
+    <button class="tab" data-tab="saved">SAVED</button>
+    <button class="tab" data-tab="settings">SETTINGS</button>
   </div>
 
-  <!-- Log Tab -->
+  <!-- LOG -->
 
   <div id="tab-log" class="card">
-    <div class="section-label" style="margin-bottom:10px;">ADD FOOD</div>
-    <div class="input-row">
-      <input type="text" id="foodInput" placeholder="e.g. WPC 2 scoops, 14g honey"/>
-      <button class="add-btn" id="addBtn">+ Add</button>
+    <div class="sec-label">ADD FOOD</div>
+    <div class="row">
+      <input type="text" id="foodInput" placeholder="e.g. WPC 2 scoops, 14g honey" autocomplete="off" autocorrect="off"/>
+      <button class="btn-add" id="addBtn">+ Add</button>
     </div>
-    <div class="toggle-row" id="saveToggleRow">
-      <div class="toggle" id="saveToggle"><div class="toggle-knob"></div></div>
-      <span class="toggle-label" id="saveToggleLabel">SAVE TO LIBRARY</span>
+    <div class="toggle-row" id="togRow">
+      <div class="tog" id="tog"><div class="tog-knob"></div></div>
+      <span class="tog-label" id="togLabel">SAVE TO LIBRARY</span>
     </div>
-    <div class="error" id="errorMsg" style="display:none;"></div>
-    <div class="log-divider">
-      <div class="section-label">TODAY'S LOG</div>
+    <div class="err" id="errMsg"></div>
+    <div class="divider">
+      <div class="sec-label">TODAY'S LOG</div>
       <div id="logList"></div>
-      <div class="totals-row" id="totalsRow" style="display:none;">
-        <span><span id="totalCalDisp" style="color:#f4a261;"></span> kcal</span>
-        <span><span id="totalProDisp" style="color:#52b788;"></span>g protein</span>
+      <div class="totals" id="totalsRow" style="display:none;">
+        <span><span id="tCal" style="color:#f4a261;"></span> kcal</span>
+        <span><span id="tPro" style="color:#52b788;"></span>g protein</span>
       </div>
     </div>
   </div>
 
-  <!-- Saved Tab -->
+  <!-- SAVED -->
 
   <div id="tab-saved" class="card" style="display:none;">
-    <div class="section-label">SAVED FOODS</div>
+    <div class="sec-label">SAVED FOODS</div>
     <div id="savedList"></div>
   </div>
 
-  <!-- Settings Tab -->
+  <!-- SETTINGS -->
 
   <div id="tab-settings" class="card" style="display:none;">
-    <div class="section-label" style="margin-bottom:16px;">SETTINGS</div>
-    <div class="settings-label">GEMINI API KEY</div>
-    <div id="keyArea"></div>
+    <div class="sec-label" style="margin-bottom:16px;">SETTINGS</div>
+    <div class="set-section">
+      <div class="set-label">ANTHROPIC API KEY</div>
+      <div id="keyArea"></div>
+      <div class="hint">Get a free key at aistudio.google.com → Get API key<br>Stored only in this browser. Never sent anywhere else.</div>
+    </div>
+    <div class="set-section">
+      <div class="set-label">TARGETS</div>
+      <div class="row" style="margin-bottom:0;">
+        <input type="number" id="calTarget" placeholder="Calories" style="font-family:'SF Mono',monospace;font-size:14px;"/>
+        <input type="number" id="proTarget" placeholder="Protein (g)" style="font-family:'SF Mono',monospace;font-size:14px;"/>
+        <button class="btn-add" id="saveTargets">Save</button>
+      </div>
+    </div>
   </div>
 
   <div class="footer">DATA PERSISTS · TAP NEW CYCLE TO RESET</div>
 </div>
 
 <script>
-  const CAL_TARGET = 2100;
-  const PRO_TARGET = 150;
-  const MEAL_COLORS = { Breakfast:"#f4a261", Lunch:"#52b788", Dinner:"#4cc9f0", Snack:"#c77dff", Drink:"#90e0ef", Treat:"#f72585" };
+  const COLORS = { Breakfast:"#f4a261", Lunch:"#52b788", Dinner:"#4cc9f0", Snack:"#c77dff", Drink:"#90e0ef", Treat:"#f72585" };
 
-  // State
-  let log = JSON.parse(localStorage.getItem("fg-log") || "[]");
-  let saved = JSON.parse(localStorage.getItem("fg-saved") || "[]");
-  let apiKey = localStorage.getItem("fg-key") || "";
+  let log      = JSON.parse(localStorage.getItem("fg-log") || "[]");
+  let saved    = JSON.parse(localStorage.getItem("fg-saved") || "[]");
+  let apiKey   = localStorage.getItem("fg-key") || "";
+  let calTgt   = parseInt(localStorage.getItem("fg-cal") || "2100");
+  let proTgt   = parseInt(localStorage.getItem("fg-pro") || "150");
   let saveNext = false;
-  let resetConfirm = false;
-  let resetTimer = null;
-  let loading = false;
-  let activeTab = "log";
+  let loading  = false;
+  let resetConfirm = false, resetTimer;
 
   function persist() {
-    localStorage.setItem("fg-log", JSON.stringify(log));
+    localStorage.setItem("fg-log",   JSON.stringify(log));
     localStorage.setItem("fg-saved", JSON.stringify(saved));
-    localStorage.setItem("fg-key", apiKey);
+    localStorage.setItem("fg-key",   apiKey);
+    localStorage.setItem("fg-cal",   calTgt);
+    localStorage.setItem("fg-pro",   proTgt);
   }
 
-  // Gauge renderer
-  function renderGauge(el, label, value, target, color, unit) {
-    const pct = Math.min((value / target) * 100, 100);
-    const over = value > target;
+  /* ---- Gauges ---- */
+  function gauge(el, label, val, tgt, color, unit) {
+    const pct  = Math.min((val/tgt)*100, 100);
+    const over = val > tgt;
     const segs = Array.from({length:20}).map((_,i) => {
-      const filled = (i/20)*100 < pct;
-      return `<div class="gauge-seg${filled?' filled':''}" style="${filled?`background:${over?'#ff6b6b':color};box-shadow:0 0 6px ${color}55`:''}"></div>`;
+      const on = (i/20)*100 < pct;
+      return `<div class="seg${on?' on':''}" style="${on?`background:${over?'#ff6b6b':color};box-shadow:0 0 5px ${color}44`:''}"></div>`;
     }).join('');
     el.innerHTML = `
       <div class="gauge-header">
-        <span class="gauge-label">${label}</span>
-        <span class="gauge-val">
-          <span class="current" style="color:${over?'#ff6b6b':color}">${Math.round(value)}</span>
-          <span class="target"> / ${target}${unit}</span>
+        <span class="gauge-lbl">${label}</span>
+        <span class="gauge-nums">
+          <span class="gauge-cur" style="color:${over?'#ff6b6b':color}">${Math.round(val)}</span>
+          <span class="gauge-tgt"> / ${tgt}${unit}</span>
         </span>
       </div>
       <div class="gauge-bar">${segs}</div>
-      <div class="gauge-remaining">${over ? `⚠ ${Math.round(value-target)}${unit} over` : `${Math.round(target-value)}${unit} remaining`}</div>
-    `;
+      <div class="gauge-sub">${over?`⚠ ${Math.round(val-tgt)}${unit} over`:`${Math.round(tgt-val)}${unit} remaining`}</div>`;
   }
 
   function renderGauges() {
-    const totalCal = log.reduce((s,e) => s+e.cal, 0);
-    const totalPro = log.reduce((s,e) => s+e.pro, 0);
-    renderGauge(document.getElementById('calGauge'), 'Calories', totalCal, CAL_TARGET, '#f4a261', ' kcal');
-    renderGauge(document.getElementById('proGauge'), 'Protein', totalPro, PRO_TARGET, '#52b788', 'g');
-    document.getElementById('totalCalDisp').textContent = totalCal;
-    document.getElementById('totalProDisp').textContent = totalPro;
+    const cal = log.reduce((s,e)=>s+e.cal,0);
+    const pro = log.reduce((s,e)=>s+e.pro,0);
+    gauge(document.getElementById('calGauge'), 'Calories', cal, calTgt, '#f4a261', ' kcal');
+    gauge(document.getElementById('proGauge'), 'Protein',  pro, proTgt, '#52b788', 'g');
+    document.getElementById('tCal').textContent = cal;
+    document.getElementById('tPro').textContent = pro;
     document.getElementById('totalsRow').style.display = log.length ? 'flex' : 'none';
   }
 
-  function entryHTML(entry, isLog) {
-    const color = MEAL_COLORS[entry.meal] || '#555';
+  /* ---- Entry HTML ---- */
+  function entryHTML(e, isLog) {
+    const c = COLORS[e.meal] || '#555';
     const meta = isLog
-      ? `<span style="color:${color}">${entry.meal}</span> · ${entry.cal} kcal · ${entry.pro}g protein`
-      : `${entry.cal} kcal · ${entry.pro}g protein`;
-    const actions = isLog
-      ? `<button class="remove-btn" onclick="removeLog('${entry.id}')">×</button>`
-      : `<button class="save-btn" onclick="logSaved('${entry.id}')">+ LOG</button>
-         <button class="remove-btn" onclick="removeSaved('${entry.id}')">×</button>`;
-    return `
-      <div class="entry">
-        <div class="entry-bar" style="background:${color}"></div>
-        <div class="entry-info">
-          <div class="entry-name">${entry.item}</div>
-          <div class="entry-meta">${meta}</div>
-        </div>
-        ${actions}
-      </div>`;
+      ? `<span style="color:${c}">${e.meal}</span> · ${e.cal} kcal · ${e.pro}g protein`
+      : `${e.cal} kcal · ${e.pro}g protein`;
+    const btns = isLog
+      ? `<button class="btn-remove" onclick="rmLog('${e.id}')">×</button>`
+      : `<button class="btn-save" onclick="logSaved('${e.id}')">+ LOG</button>
+         <button class="btn-remove" onclick="rmSaved('${e.id}')">×</button>`;
+    return `<div class="entry">
+      <div class="entry-bar" style="background:${c}"></div>
+      <div class="entry-info">
+        <div class="entry-name">${e.item}</div>
+        <div class="entry-meta">${meta}</div>
+      </div>${btns}</div>`;
   }
 
   function renderLog() {
-    const el = document.getElementById('logList');
-    el.innerHTML = log.length
-      ? log.map(e => entryHTML(e, true)).join('')
+    document.getElementById('logList').innerHTML = log.length
+      ? log.map(e=>entryHTML(e,true)).join('')
       : '<div class="empty">— nothing logged yet —</div>';
     renderGauges();
   }
 
   function renderSaved() {
-    const el = document.getElementById('savedList');
-    el.innerHTML = saved.length
-      ? saved.map(e => entryHTML(e, false)).join('')
-      : '<div class="empty">— no saved foods yet —<br><span style="color:#2a2a2a">toggle "save to library" when logging</span></div>';
+    document.getElementById('savedList').innerHTML = saved.length
+      ? saved.map(e=>entryHTML(e,false)).join('')
+      : '<div class="empty">— no saved foods yet —<br><span style="color:#1e1e1e">toggle save when logging</span></div>';
   }
 
-  function renderKeyArea() {
-    const el = document.getElementById('keyArea');
-    if (apiKey) {
-      el.innerHTML = `
-        <div style="display:flex;gap:8px;">
-          <div class="key-saved">✓ Key saved</div>
-          <button class="icon-btn" onclick="removeKey()">Remove</button>
-        </div>`;
-    } else {
-      el.innerHTML = `
-        <div class="input-row" style="margin-bottom:8px;">
-          <input type="password" id="keyInput" placeholder="AIza..."/>
-          <button class="icon-btn" id="eyeBtn" onclick="toggleEye()">👁</button>
-          <button class="add-btn" id="saveKeyBtn" onclick="saveKey()">Save</button>
-        </div>
-        <div class="hint">Get a free key at aistudio.google.com → Get API key<br>Stored locally in your browser only.</div>`;
-    }
+  function renderKey() {
+    document.getElementById('keyArea').innerHTML = apiKey
+      ? `<div class="row"><div class="key-ok">✓ Key saved</div><button class="btn-text" onclick="rmKey()">Remove</button></div>`
+      : `<div class="row">
+           <input type="password" id="keyInp" placeholder="sk-ant-..." autocomplete="off" autocorrect="off"/>
+           <button class="btn-icon" id="eyeBtn" onclick="toggleEye()">👁</button>
+           <button class="btn-add" onclick="saveKey()">Save</button>
+         </div>`;
   }
 
-  function render() {
-    renderLog();
-    renderSaved();
-    renderKeyArea();
+  function renderTargets() {
+    document.getElementById('calTarget').value = calTgt;
+    document.getElementById('proTarget').value = proTgt;
   }
 
-  // Actions
-  window.removeLog = function(id) {
-    log = log.filter(e => e.id != id);
-    persist(); renderLog();
+  /* ---- Global actions ---- */
+  window.rmLog    = id => { log   = log.filter(e=>e.id!=id);   persist(); renderLog(); };
+  window.rmSaved  = id => { saved = saved.filter(e=>e.id!=id); persist(); renderSaved(); };
+  window.rmKey    = ()  => { apiKey=""; persist(); renderKey(); };
+  window.logSaved = id  => {
+    const it = saved.find(e=>e.id==id);
+    if (it) { log.push({...it, id:Date.now().toString()}); persist(); renderLog(); }
   };
-  window.removeSaved = function(id) {
-    saved = saved.filter(e => e.id != id);
-    persist(); renderSaved();
-  };
-  window.logSaved = function(id) {
-    const item = saved.find(e => e.id == id);
-    if (!item) return;
-    log.push({ ...item, id: Date.now().toString() });
-    persist(); renderLog();
-  };
-  window.removeKey = function() {
-    apiKey = ""; persist(); renderKeyArea();
-  };
-  window.toggleEye = function() {
-    const inp = document.getElementById('keyInput');
+  window.toggleEye = () => {
+    const inp = document.getElementById('keyInp');
     const btn = document.getElementById('eyeBtn');
     if (!inp) return;
-    inp.type = inp.type === 'password' ? 'text' : 'password';
-    btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+    inp.type = inp.type==='password' ? 'text' : 'password';
+    btn.textContent = inp.type==='password' ? '👁' : '🙈';
   };
-  window.saveKey = function() {
-    const val = (document.getElementById('keyInput')?.value || '').trim();
-    if (!val) return;
-    apiKey = val; persist(); renderKeyArea();
+  window.saveKey = () => {
+    const v = (document.getElementById('keyInp')?.value||'').trim();
+    if (!v) return;
+    apiKey=v; persist(); renderKey();
   };
 
-  // Toggle
-  document.getElementById('saveToggleRow').addEventListener('click', () => {
-    saveNext = !saveNext;
-    const tog = document.getElementById('saveToggle');
-    const lbl = document.getElementById('saveToggleLabel');
-    tog.classList.toggle('on', saveNext);
-    lbl.classList.toggle('on', saveNext);
+  /* ---- Targets ---- */
+  document.getElementById('saveTargets').addEventListener('click', () => {
+    const c = parseInt(document.getElementById('calTarget').value);
+    const p = parseInt(document.getElementById('proTarget').value);
+    if (c>0) calTgt=c;
+    if (p>0) proTgt=p;
+    persist(); renderGauges();
   });
 
-  // Reset
+  /* ---- Toggle ---- */
+  document.getElementById('togRow').addEventListener('click', () => {
+    saveNext = !saveNext;
+    document.getElementById('tog').classList.toggle('on', saveNext);
+    document.getElementById('togLabel').classList.toggle('on', saveNext);
+  });
+
+  /* ---- Reset ---- */
   document.getElementById('resetBtn').addEventListener('click', () => {
     if (!resetConfirm) {
-      resetConfirm = true;
-      document.getElementById('resetBtn').textContent = 'CONFIRM?';
+      resetConfirm=true;
+      document.getElementById('resetBtn').textContent='CONFIRM?';
       document.getElementById('resetBtn').classList.add('confirm');
-      resetTimer = setTimeout(() => {
-        resetConfirm = false;
-        document.getElementById('resetBtn').textContent = 'NEW CYCLE';
+      resetTimer=setTimeout(()=>{
+        resetConfirm=false;
+        document.getElementById('resetBtn').textContent='NEW CYCLE';
         document.getElementById('resetBtn').classList.remove('confirm');
-      }, 3000);
+      },3000);
       return;
     }
     clearTimeout(resetTimer);
-    resetConfirm = false;
-    log = [];
+    resetConfirm=false; log=[];
     persist(); renderLog();
-    document.getElementById('resetBtn').textContent = 'NEW CYCLE';
+    document.getElementById('resetBtn').textContent='NEW CYCLE';
     document.getElementById('resetBtn').classList.remove('confirm');
   });
 
-  // Tabs
-  document.querySelectorAll('.tab-btn').forEach(btn => {
+  /* ---- Tabs ---- */
+  document.querySelectorAll('.tab').forEach(btn => {
     btn.addEventListener('click', () => {
-      activeTab = btn.dataset.tab;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       ['log','saved','settings'].forEach(t => {
-        document.getElementById(`tab-${t}`).style.display = t === activeTab ? 'block' : 'none';
+        document.getElementById(`tab-${t}`).style.display = t===btn.dataset.tab ? 'block' : 'none';
       });
     });
   });
 
-  // Add food
+  /* ---- Add food ---- */
   async function addFood() {
-    const input = document.getElementById('foodInput');
-    const text = input.value.trim();
+    const inp = document.getElementById('foodInput');
+    const text = inp.value.trim();
     if (!text || loading) return;
     if (!apiKey) {
-      showError("Add your Gemini API key in Settings first.");
+      showErr("Add your Anthropic API key in Settings first.");
       document.querySelector('[data-tab="settings"]').click();
       return;
     }
-    loading = true;
-    const btn = document.getElementById('addBtn');
-    btn.disabled = true; btn.textContent = '...';
-    hideError();
+    loading=true;
+    const btn=document.getElementById('addBtn');
+    btn.disabled=true; btn.textContent='...';
+    hideErr();
     try {
-      const entry = await parseWithGemini(text);
-      log.push({ ...entry, id: Date.now().toString() });
+      const entry = await parseFood(text);
+      log.push({...entry, id:Date.now().toString()});
       if (saveNext) {
-        saved.push({ ...entry, id: (Date.now()+1).toString() });
-        saveNext = false;
-        document.getElementById('saveToggle').classList.remove('on');
-        document.getElementById('saveToggleLabel').classList.remove('on');
+        saved.push({...entry, id:(Date.now()+1).toString()});
+        saveNext=false;
+        document.getElementById('tog').classList.remove('on');
+        document.getElementById('togLabel').classList.remove('on');
       }
-      input.value = '';
-      persist(); render();
-    } catch(e) {
-      showError(e.message);
-    }
-    loading = false;
-    btn.disabled = false; btn.textContent = '+ Add';
+      inp.value='';
+      persist(); renderLog();
+    } catch(e) { showErr(e.message); }
+    loading=false; btn.disabled=false; btn.textContent='+ Add';
   }
 
   document.getElementById('addBtn').addEventListener('click', addFood);
   document.getElementById('foodInput').addEventListener('keydown', e => { if(e.key==='Enter') addFood(); });
 
-  function showError(msg) {
-    const el = document.getElementById('errorMsg');
-    el.textContent = '⚠ ' + msg;
-    el.style.display = 'block';
-  }
-  function hideError() {
-    document.getElementById('errorMsg').style.display = 'none';
-  }
+  function showErr(msg) { const e=document.getElementById('errMsg'); e.textContent='⚠ '+msg; e.style.display='block'; }
+  function hideErr()    { document.getElementById('errMsg').style.display='none'; }
 
-  async function parseWithGemini(input) {
-    const prompt = `You are a nutrition estimator. Given a food description, respond with ONLY a raw JSON object, no markdown, no backticks, no explanation.
-Format: {"meal":"Breakfast","item":"clean item name","cal":number,"pro":number}
-meal must be one of: Breakfast, Lunch, Dinner, Snack, Drink, Treat
-cal = calories as integer, pro = grams of protein as integer.
-Food: ${input}`;
-
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.1, maxOutputTokens: 200 }
-        })
-      }
-    );
+  /* ---- Anthropic Haiku ---- */
+  async function parseFood(text) {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 200,
+        system: `Nutrition estimator. Given a food description respond with ONLY raw JSON, no markdown, no backticks.
+Format: {"meal":"Breakfast","item":"clean name","cal":number,"pro":number}
+meal: Breakfast|Lunch|Dinner|Snack|Drink|Treat. cal=calories integer. pro=protein grams integer.`,
+        messages: [{ role:'user', content: text }]
+      })
+    });
     if (!res.ok) {
       const err = await res.json();
       throw new Error(err?.error?.message || `API error ${res.status}`);
     }
     const data = await res.json();
-    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const raw  = data.content?.find(b=>b.type==='text')?.text || '';
     const match = raw.match(/\{[\s\S]*?\}/);
-    if (!match) throw new Error(`Unexpected response: ${raw.slice(0,80)}`);
+    if (!match) throw new Error(`Unexpected: ${raw.slice(0,80)}`);
     const parsed = JSON.parse(match[0]);
-    if (!parsed.item || typeof parsed.cal !== 'number' || typeof parsed.pro !== 'number') throw new Error('Bad response shape');
-    if (!['Breakfast','Lunch','Dinner','Snack','Drink','Treat'].includes(parsed.meal)) parsed.meal = 'Snack';
+    if (!parsed.item || typeof parsed.cal!=='number' || typeof parsed.pro!=='number') throw new Error('Bad response');
+    if (!['Breakfast','Lunch','Dinner','Snack','Drink','Treat'].includes(parsed.meal)) parsed.meal='Snack';
     return parsed;
   }
 
-  // Init
-  render();
+  /* ---- Init ---- */
+  renderLog(); renderSaved(); renderKey(); renderTargets();
 </script>
 
 </body>
