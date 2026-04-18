@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -22,92 +21,89 @@
     }
     .wrap { max-width: 480px; margin: 0 auto; padding: 52px 16px 80px; }
 
-```
-/* Header */
-.header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; }
-.cycle-label { font-family: 'SF Mono', monospace; font-size: 10px; letter-spacing: 4px; color: #444; margin-bottom: 5px; }
-h1 { font-size: 26px; font-weight: 300; color: #eee; letter-spacing: -0.5px; }
-h1 span { color: #4cc9f0; font-weight: 500; }
-.new-cycle-btn {
-  background: none; border: 1px solid #2a2a2a; border-radius: 8px;
-  padding: 7px 13px; color: #444; font-size: 11px;
-  font-family: 'SF Mono', monospace; letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
-}
-.new-cycle-btn.confirm { border-color: #ff6b6b; color: #ff6b6b; background: #ff6b6b18; }
+    /* Header */
+    .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; }
+    .cycle-label { font-family: 'SF Mono', monospace; font-size: 10px; letter-spacing: 4px; color: #444; margin-bottom: 5px; }
+    h1 { font-size: 26px; font-weight: 300; color: #eee; letter-spacing: -0.5px; }
+    h1 span { color: #4cc9f0; font-weight: 500; }
+    .new-cycle-btn {
+      background: none; border: 1px solid #2a2a2a; border-radius: 8px;
+      padding: 7px 13px; color: #444; font-size: 11px;
+      font-family: 'SF Mono', monospace; letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
+    }
+    .new-cycle-btn.confirm { border-color: #ff6b6b; color: #ff6b6b; background: #ff6b6b18; }
 
-/* Cards */
-.card { background: #111; border-radius: 16px; padding: 20px; border: 1px solid #1e1e1e; margin-bottom: 14px; }
+    /* Cards */
+    .card { background: #111; border-radius: 16px; padding: 20px; border: 1px solid #1e1e1e; margin-bottom: 14px; }
 
-/* Gauges */
-.gauge { margin-bottom: 22px; }
-.gauge:last-child { margin-bottom: 6px; }
-.gauge-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
-.gauge-lbl { font-family: 'SF Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #888; }
-.gauge-nums { font-family: 'SF Mono', monospace; }
-.gauge-cur { font-size: 20px; font-weight: 700; }
-.gauge-tgt { font-size: 13px; color: #555; }
-.gauge-bar { display: flex; gap: 3px; }
-.seg { flex: 1; height: 10px; border-radius: 3px; background: #1e1e1e; border: 1px solid #2a2a2a; }
-.seg.on { border-color: transparent; }
-.gauge-sub { margin-top: 5px; font-family: 'SF Mono', monospace; font-size: 11px; color: #555; }
+    /* Gauges */
+    .gauge { margin-bottom: 22px; }
+    .gauge:last-child { margin-bottom: 6px; }
+    .gauge-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .gauge-lbl { font-family: 'SF Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #888; }
+    .gauge-nums { font-family: 'SF Mono', monospace; }
+    .gauge-cur { font-size: 20px; font-weight: 700; }
+    .gauge-tgt { font-size: 13px; color: #555; }
+    .gauge-bar { display: flex; gap: 3px; }
+    .seg { flex: 1; height: 10px; border-radius: 3px; background: #1e1e1e; border: 1px solid #2a2a2a; }
+    .seg.on { border-color: transparent; }
+    .gauge-sub { margin-top: 5px; font-family: 'SF Mono', monospace; font-size: 11px; color: #555; }
 
-/* Tabs */
-.tabs { display: flex; gap: 6px; margin-bottom: 14px; }
-.tab { background: none; border: 1px solid transparent; border-radius: 8px; padding: 7px 14px; color: #555; font-size: 11px; font-family: 'SF Mono', monospace; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
-.tab.active { background: #1e1e1e; border-color: #333; color: #eee; }
+    /* Tabs */
+    .tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+    .tab { background: none; border: 1px solid transparent; border-radius: 8px; padding: 7px 14px; color: #555; font-size: 11px; font-family: 'SF Mono', monospace; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
+    .tab.active { background: #1e1e1e; border-color: #333; color: #eee; }
 
-/* Inputs */
-.row { display: flex; gap: 8px; margin-bottom: 8px; }
-input {
-  flex: 1; background: #181818; border: 1px solid #2a2a2a; border-radius: 10px;
-  padding: 11px 13px; color: #eee; font-size: 15px; outline: none;
-  font-family: -apple-system, sans-serif; -webkit-appearance: none; appearance: none;
-  -webkit-text-fill-color: #eee;
-}
-input::placeholder { color: #3a3a3a; -webkit-text-fill-color: #3a3a3a; }
-input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #181818 inset !important; -webkit-text-fill-color: #eee !important; }
+    /* Inputs */
+    .row { display: flex; gap: 8px; margin-bottom: 8px; }
+    input {
+      flex: 1; background: #181818; border: 1px solid #2a2a2a; border-radius: 10px;
+      padding: 11px 13px; color: #eee; font-size: 15px; outline: none;
+      font-family: -apple-system, sans-serif; -webkit-appearance: none; appearance: none;
+      -webkit-text-fill-color: #eee;
+    }
+    input::placeholder { color: #3a3a3a; -webkit-text-fill-color: #3a3a3a; }
+    input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #181818 inset !important; -webkit-text-fill-color: #eee !important; }
 
-.btn-add { background: #4cc9f0; border: none; border-radius: 10px; padding: 11px 16px; color: #000; font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
-.btn-add:disabled { background: #1e1e1e; color: #555; cursor: default; }
-.btn-icon { background: none; border: 1px solid #2a2a2a; border-radius: 10px; padding: 11px 13px; color: #555; cursor: pointer; font-size: 14px; -webkit-tap-highlight-color: transparent; }
-.btn-save { background: #4cc9f022; border: 1px solid #4cc9f044; border-radius: 7px; padding: 5px 10px; color: #4cc9f0; font-size: 11px; font-family: 'SF Mono', monospace; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.btn-remove { background: none; border: none; color: #3a3a3a; cursor: pointer; font-size: 20px; padding: 4px 8px; line-height: 1; -webkit-tap-highlight-color: transparent; transition: color 0.15s; }
-.btn-remove:active { color: #ff6b6b; }
-.btn-text { background: none; border: 1px solid #2a2a2a; border-radius: 10px; padding: 10px 14px; color: #555; font-size: 11px; font-family: 'SF Mono', monospace; cursor: pointer; }
+    .btn-add { background: #4cc9f0; border: none; border-radius: 10px; padding: 11px 16px; color: #000; font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+    .btn-add:disabled { background: #1e1e1e; color: #555; cursor: default; }
+    .btn-icon { background: none; border: 1px solid #2a2a2a; border-radius: 10px; padding: 11px 13px; color: #555; cursor: pointer; font-size: 14px; -webkit-tap-highlight-color: transparent; }
+    .btn-save { background: #4cc9f022; border: 1px solid #4cc9f044; border-radius: 7px; padding: 5px 10px; color: #4cc9f0; font-size: 11px; font-family: 'SF Mono', monospace; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .btn-remove { background: none; border: none; color: #3a3a3a; cursor: pointer; font-size: 20px; padding: 4px 8px; line-height: 1; -webkit-tap-highlight-color: transparent; transition: color 0.15s; }
+    .btn-remove:active { color: #ff6b6b; }
+    .btn-text { background: none; border: 1px solid #2a2a2a; border-radius: 10px; padding: 10px 14px; color: #555; font-size: 11px; font-family: 'SF Mono', monospace; cursor: pointer; }
 
-/* Toggle */
-.toggle-row { display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 10px; -webkit-tap-highlight-color: transparent; }
-.tog { width: 34px; height: 20px; border-radius: 10px; background: #1e1e1e; border: 1px solid #333; position: relative; transition: all 0.2s; flex-shrink: 0; }
-.tog.on { background: #52b788; border-color: #52b788; }
-.tog-knob { position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: #555; transition: left 0.2s, background 0.2s; }
-.tog.on .tog-knob { left: 17px; background: #fff; }
-.tog-label { font-size: 11px; font-family: 'SF Mono', monospace; letter-spacing: 1px; color: #555; transition: color 0.2s; }
-.tog-label.on { color: #52b788; }
+    /* Toggle */
+    .toggle-row { display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 10px; -webkit-tap-highlight-color: transparent; }
+    .tog { width: 34px; height: 20px; border-radius: 10px; background: #1e1e1e; border: 1px solid #333; position: relative; transition: all 0.2s; flex-shrink: 0; }
+    .tog.on { background: #52b788; border-color: #52b788; }
+    .tog-knob { position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: #555; transition: left 0.2s, background 0.2s; }
+    .tog.on .tog-knob { left: 17px; background: #fff; }
+    .tog-label { font-size: 11px; font-family: 'SF Mono', monospace; letter-spacing: 1px; color: #555; transition: color 0.2s; }
+    .tog-label.on { color: #52b788; }
 
-/* Error */
-.err { font-size: 11px; color: #ff6b6b; font-family: 'SF Mono', monospace; word-break: break-all; line-height: 1.5; margin-bottom: 10px; display: none; }
+    /* Error */
+    .err { font-size: 11px; color: #ff6b6b; font-family: 'SF Mono', monospace; word-break: break-all; line-height: 1.5; margin-bottom: 10px; display: none; }
 
-/* Log */
-.divider { border-top: 1px solid #1a1a1a; padding-top: 12px; margin-top: 4px; }
-.sec-label { font-family: 'SF Mono', monospace; font-size: 10px; letter-spacing: 3px; color: #444; margin-bottom: 10px; }
-.entry { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #181818; }
-.entry-bar { width: 3px; height: 34px; border-radius: 2px; flex-shrink: 0; }
-.entry-info { flex: 1; min-width: 0; }
-.entry-name { font-size: 14px; color: #ddd; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.entry-meta { font-size: 11px; color: #555; font-family: 'SF Mono', monospace; margin-top: 2px; }
-.totals { display: flex; justify-content: flex-end; gap: 16px; padding-top: 10px; font-family: 'SF Mono', monospace; font-size: 11px; color: #555; }
-.empty { color: #2a2a2a; font-size: 12px; text-align: center; padding: 20px 0; font-family: 'SF Mono', monospace; line-height: 1.8; }
+    /* Log */
+    .divider { border-top: 1px solid #1a1a1a; padding-top: 12px; margin-top: 4px; }
+    .sec-label { font-family: 'SF Mono', monospace; font-size: 10px; letter-spacing: 3px; color: #444; margin-bottom: 10px; }
+    .entry { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #181818; }
+    .entry-bar { width: 3px; height: 34px; border-radius: 2px; flex-shrink: 0; }
+    .entry-info { flex: 1; min-width: 0; }
+    .entry-name { font-size: 14px; color: #ddd; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .entry-meta { font-size: 11px; color: #555; font-family: 'SF Mono', monospace; margin-top: 2px; }
+    .totals { display: flex; justify-content: flex-end; gap: 16px; padding-top: 10px; font-family: 'SF Mono', monospace; font-size: 11px; color: #555; }
+    .empty { color: #2a2a2a; font-size: 12px; text-align: center; padding: 20px 0; font-family: 'SF Mono', monospace; line-height: 1.8; }
 
-/* Settings */
-.set-label { font-size: 12px; font-family: 'SF Mono', monospace; color: #666; margin-bottom: 8px; letter-spacing: 1px; }
-.key-ok { flex: 1; background: #181818; border: 1px solid #1e1e1e; border-radius: 10px; padding: 10px 13px; font-size: 13px; color: #52b788; font-family: 'SF Mono', monospace; }
-.hint { font-size: 11px; color: #3a3a3a; font-family: 'SF Mono', monospace; line-height: 1.8; margin-top: 8px; }
-.hint a { color: #4cc9f055; }
-.set-section { margin-bottom: 24px; }
+    /* Settings */
+    .set-label { font-size: 12px; font-family: 'SF Mono', monospace; color: #666; margin-bottom: 8px; letter-spacing: 1px; }
+    .key-ok { flex: 1; background: #181818; border: 1px solid #1e1e1e; border-radius: 10px; padding: 10px 13px; font-size: 13px; color: #52b788; font-family: 'SF Mono', monospace; }
+    .hint { font-size: 11px; color: #3a3a3a; font-family: 'SF Mono', monospace; line-height: 1.8; margin-top: 8px; }
+    .hint a { color: #4cc9f055; }
+    .set-section { margin-bottom: 24px; }
 
-.footer { margin-top: 14px; text-align: center; font-family: 'SF Mono', monospace; font-size: 10px; color: #1a1a1a; letter-spacing: 2px; }
-```
-
+    .footer { margin-top: 14px; text-align: center; font-family: 'SF Mono', monospace; font-size: 10px; color: #1a1a1a; letter-spacing: 2px; }
   </style>
 </head>
 <body>
@@ -133,7 +129,6 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #181818 inset !importa
   </div>
 
   <!-- LOG -->
-
   <div id="tab-log" class="card">
     <div class="sec-label">ADD FOOD</div>
     <div class="row">
@@ -156,14 +151,12 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #181818 inset !importa
   </div>
 
   <!-- SAVED -->
-
   <div id="tab-saved" class="card" style="display:none;">
     <div class="sec-label">SAVED FOODS</div>
     <div id="savedList"></div>
   </div>
 
   <!-- SETTINGS -->
-
   <div id="tab-settings" class="card" style="display:none;">
     <div class="sec-label" style="margin-bottom:16px;">SETTINGS</div>
     <div class="set-section">
@@ -173,10 +166,10 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #181818 inset !importa
     </div>
     <div class="set-section">
       <div class="set-label">TARGETS</div>
-      <div class="row" style="margin-bottom:0;">
-        <input type="number" id="calTarget" placeholder="Calories" style="font-family:'SF Mono',monospace;font-size:14px;"/>
-        <input type="number" id="proTarget" placeholder="Protein (g)" style="font-family:'SF Mono',monospace;font-size:14px;"/>
-        <button class="btn-add" id="saveTargets">Save</button>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <input type="number" id="calTarget" placeholder="Calories" style="font-family:'SF Mono',monospace;font-size:14px;width:100%;"/>
+        <input type="number" id="proTarget" placeholder="Protein (g)" style="font-family:'SF Mono',monospace;font-size:14px;width:100%;"/>
+        <button class="btn-add" id="saveTargets" style="width:100%;">Save Targets</button>
       </div>
     </div>
   </div>
@@ -206,22 +199,25 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #181818 inset !importa
 
   /* ---- Gauges ---- */
   function gauge(el, label, val, tgt, color, unit) {
-    const pct  = Math.min((val/tgt)*100, 100);
+    const remaining = Math.max(tgt - val, 0);
+    const pct  = Math.min((remaining/tgt)*100, 100);
     const over = val > tgt;
     const segs = Array.from({length:20}).map((_,i) => {
       const on = (i/20)*100 < pct;
       return `<div class="seg${on?' on':''}" style="${on?`background:${over?'#ff6b6b':color};box-shadow:0 0 5px ${color}44`:''}"></div>`;
     }).join('');
+    const displayVal = over ? `⚠ ${Math.round(val-tgt)}${unit} over` : Math.round(remaining);
+    const displayUnit = over ? '' : unit;
     el.innerHTML = `
       <div class="gauge-header">
         <span class="gauge-lbl">${label}</span>
         <span class="gauge-nums">
-          <span class="gauge-cur" style="color:${over?'#ff6b6b':color}">${Math.round(val)}</span>
-          <span class="gauge-tgt"> / ${tgt}${unit}</span>
+          <span class="gauge-cur" style="color:${over?'#ff6b6b':color}">${displayVal}</span>
+          <span class="gauge-tgt">${over ? '' : `${displayUnit} left`}</span>
         </span>
       </div>
       <div class="gauge-bar">${segs}</div>
-      <div class="gauge-sub">${over?`⚠ ${Math.round(val-tgt)}${unit} over`:`${Math.round(tgt-val)}${unit} remaining`}</div>`;
+      <div class="gauge-sub">${Math.round(val)} / ${tgt}${unit} used</div>`;
   }
 
   function renderGauges() {
@@ -241,12 +237,14 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #181818 inset !importa
       ? `<span style="color:${c}">${e.meal}</span> · ${e.cal} kcal · ${e.pro}g protein`
       : `${e.cal} kcal · ${e.pro}g protein`;
     const btns = isLog
-      ? `<button class="btn-remove" onclick="rmLog('${e.id}')">×</button>`
+      ? `<button class="btn-save" title="Save to library" onclick="saveFromLog('${e.id}')">💾</button>
+         <button class="btn-remove" onclick="rmLog('${e.id}')">×</button>`
       : `<button class="btn-save" onclick="logSaved('${e.id}')">+ LOG</button>
          <button class="btn-remove" onclick="rmSaved('${e.id}')">×</button>`;
+    // tap entry name to copy into input
     return `<div class="entry">
       <div class="entry-bar" style="background:${c}"></div>
-      <div class="entry-info">
+      <div class="entry-info" onclick="copyToInput('${e.item.replace(/'/g,"&#39;")}')" style="cursor:pointer;">
         <div class="entry-name">${e.item}</div>
         <div class="entry-meta">${meta}</div>
       </div>${btns}</div>`;
@@ -284,6 +282,23 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #181818 inset !importa
   window.rmLog    = id => { log   = log.filter(e=>e.id!=id);   persist(); renderLog(); };
   window.rmSaved  = id => { saved = saved.filter(e=>e.id!=id); persist(); renderSaved(); };
   window.rmKey    = ()  => { apiKey=""; persist(); renderKey(); };
+  window.copyToInput = name => {
+    const inp = document.getElementById('foodInput');
+    inp.value = name;
+    inp.focus();
+    // scroll to top so input is visible
+    window.scrollTo({top:0, behavior:'smooth'});
+  };
+  window.saveFromLog = id => {
+    const it = log.find(e=>e.id==id);
+    if (!it) return;
+    if (saved.find(s=>s.item===it.item)) return; // already saved
+    saved.push({...it, id:(Date.now()+1).toString()});
+    persist(); renderSaved();
+    // brief visual feedback
+    const btns = document.querySelectorAll('.btn-save');
+    btns.forEach(b => { if(b.getAttribute('onclick')===`saveFromLog('${id}')`) { b.textContent='✓'; setTimeout(()=>b.textContent='💾',1200); }});
+  };
   window.logSaved = id  => {
     const it = saved.find(e=>e.id==id);
     if (it) { log.push({...it, id:Date.now().toString()}); persist(); renderLog(); }
@@ -417,6 +432,5 @@ Food: ${text}`;
   /* ---- Init ---- */
   renderLog(); renderSaved(); renderKey(); renderTargets();
 </script>
-
 </body>
 </html>
