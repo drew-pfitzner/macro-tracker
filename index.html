@@ -137,14 +137,22 @@
       <button class="btn-add" id="addBtn">+ Add</button>
     </div>
     <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;"/>
-    <div id="servingOverlay" style="display:none;background:#181818;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:10px;">
-      <div style="font-family:monospace;font-size:10px;letter-spacing:3px;color:#555;margin-bottom:10px;">LABEL SCANNED</div>
-      <div id="servingInfo" style="font-size:13px;color:#aaa;margin-bottom:12px;line-height:1.6;"></div>
-      <div style="font-family:monospace;font-size:11px;color:#666;margin-bottom:6px;">HOW MANY SERVINGS?</div>
-      <div class="row" style="margin-bottom:0;">
-        <input type="number" id="servingCount" value="1" min="0.25" step="0.25" style="font-family:monospace;font-size:14px;max-width:90px;flex:none;"/>
-        <button class="btn-add" id="confirmServing" style="flex:1;">Log It</button>
-        <button class="btn-icon" id="cancelServing">&#10005;</button>
+    <!-- Unified confirm / edit panel -->
+    <div id="qtyPanel" style="display:none;background:#181818;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:10px;">
+      <div id="qtyPanelLabel" style="font-family:monospace;font-size:10px;letter-spacing:3px;color:#555;margin-bottom:10px;">CONFIRM</div>
+      <div id="qtyItemName" style="font-size:15px;color:#eee;font-weight:500;margin-bottom:4px;"></div>
+      <div id="qtyPerUnit" style="font-size:11px;color:#555;font-family:monospace;margin-bottom:14px;"></div>
+      <div style="font-family:monospace;font-size:11px;color:#666;margin-bottom:8px;">QUANTITY</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <button id="qtyMinus" style="background:#111;border:1px solid #333;border-radius:10px;width:44px;height:44px;color:#eee;font-size:22px;cursor:pointer;flex-shrink:0;line-height:1;">−</button>
+        <input type="number" id="qtyInput" value="1" min="0.1" step="0.5" style="font-family:monospace;font-size:18px;text-align:center;flex:1;padding:10px;"/>
+        <button id="qtyPlus" style="background:#111;border:1px solid #333;border-radius:10px;width:44px;height:44px;color:#eee;font-size:22px;cursor:pointer;flex-shrink:0;line-height:1;">+</button>
+      </div>
+      <div id="qtyTotal" style="font-family:monospace;font-size:13px;color:#888;margin-bottom:14px;text-align:center;"></div>
+      <div style="display:flex;gap:8px;">
+        <button id="qtyConfirm" class="btn-add" style="flex:1;">Log It</button>
+        <button id="qtyDelete" style="display:none;background:#ff6b6b18;border:1px solid #ff6b6b44;border-radius:10px;padding:11px 14px;color:#ff6b6b;font-size:13px;cursor:pointer;">Delete</button>
+        <button id="qtyCancel" class="btn-icon">✕</button>
       </div>
     </div>
     <div class="toggle-row" id="togRow">
@@ -190,8 +198,7 @@
 </div>
 
 <script>
-  const COLORS = { Breakfast:"#f4a261", Lunch:"#52b788", Dinner:"#4cc9f0", Snack:"#c77dff", Drink:"#90e0ef", Treat:"#f72585" };
-
+  // ── State ──────────────────────────────────────────────────
   let log      = JSON.parse(localStorage.getItem("fg-log") || "[]");
   let saved    = JSON.parse(localStorage.getItem("fg-saved") || "[]");
   let apiKey   = localStorage.getItem("fg-key") || "";
@@ -201,6 +208,13 @@
   let loading  = false;
   let resetConfirm = false, resetTimer;
 
+  // qtyPanel state
+  let qtyMode   = null; // 'add' | 'edit'
+  let qtyPending = null; // parsed entry before commit
+  let qtyEditId  = null; // id of entry being edited
+
+  const COLORS = { Breakfast:"#f4a261", Lunch:"#52b788", Dinner:"#4cc9f0", Snack:"#c77dff", Drink:"#90e0ef", Treat:"#f72585" };
+
   function persist() {
     localStorage.setItem("fg-log",   JSON.stringify(log));
     localStorage.setItem("fg-saved", JSON.stringify(saved));
@@ -209,27 +223,26 @@
     localStorage.setItem("fg-pro",   proTgt);
   }
 
-  /* ---- Gauges ---- */
+  // ── Gauges ──────────────────────────────────────────────────
   function gauge(el, label, val, tgt, color, unit) {
     const remaining = Math.max(tgt - val, 0);
     const pct  = Math.min((remaining/tgt)*100, 100);
     const over = val > tgt;
     const segs = Array.from({length:20}).map((_,i) => {
       const on = (i/20)*100 < pct;
-      return `<div class="seg${on?' on':''}" style="${on?`background:${over?'#ff6b6b':color};box-shadow:0 0 5px ${color}44`:''}"></div>`;
+      return '<div class="seg' + (on?' on':'') + '" style="' + (on ? 'background:' + (over?'#ff6b6b':color) + ';box-shadow:0 0 5px ' + color + '44' : '') + '"></div>';
     }).join('');
-    const displayVal = over ? `⚠ ${Math.round(val-tgt)}${unit} over` : Math.round(remaining);
-    const displayUnit = over ? '' : unit;
-    el.innerHTML = `
-      <div class="gauge-header">
-        <span class="gauge-lbl">${label}</span>
-        <span class="gauge-nums">
-          <span class="gauge-cur" style="color:${over?'#ff6b6b':color}">${displayVal}</span>
-          <span class="gauge-tgt">${over ? '' : `${displayUnit} left`}</span>
-        </span>
-      </div>
-      <div class="gauge-bar">${segs}</div>
-      <div class="gauge-sub">${Math.round(val)} / ${tgt}${unit} used</div>`;
+    const displayVal = over ? ('⚠ ' + Math.round(val-tgt) + unit + ' over') : Math.round(remaining);
+    el.innerHTML =
+      '<div class="gauge-header">' +
+        '<span class="gauge-lbl">' + label + '</span>' +
+        '<span class="gauge-nums">' +
+          '<span class="gauge-cur" style="color:' + (over?'#ff6b6b':color) + '">' + displayVal + '</span>' +
+          '<span class="gauge-tgt">' + (over ? '' : unit + ' left') + '</span>' +
+        '</span>' +
+      '</div>' +
+      '<div class="gauge-bar">' + segs + '</div>' +
+      '<div class="gauge-sub">' + Math.round(val) + ' / ' + tgt + unit + ' used</div>';
   }
 
   function renderGauges() {
@@ -242,24 +255,106 @@
     document.getElementById('totalsRow').style.display = log.length ? 'flex' : 'none';
   }
 
-  /* ---- Entry HTML ---- */
+  // ── Qty Panel ────────────────────────────────────────────────
+  function updateQtyTotal() {
+    const qty = parseFloat(document.getElementById('qtyInput').value) || 1;
+    if (!qtyPending) return;
+    const cal = Math.round(qtyPending.calPerUnit * qty);
+    const pro = Math.round(qtyPending.proPerUnit * qty);
+    document.getElementById('qtyTotal').innerHTML =
+      '<span style="color:#f4a261;">' + cal + ' kcal</span> · <span style="color:#52b788;">' + pro + 'g protein</span>';
+  }
+
+  function openQtyPanel(mode, entry, defaultQty) {
+    qtyMode    = mode;
+    qtyPending = entry;
+    qtyEditId  = mode === 'edit' ? entry.id : null;
+
+    document.getElementById('qtyPanelLabel').textContent = mode === 'edit' ? 'EDIT ENTRY' : 'CONFIRM';
+    document.getElementById('qtyItemName').textContent   = entry.item;
+    document.getElementById('qtyPerUnit').textContent    =
+      'per unit: ' + entry.calPerUnit + ' kcal · ' + entry.proPerUnit + 'g protein';
+    document.getElementById('qtyInput').value = defaultQty || 1;
+    document.getElementById('qtyDelete').style.display = mode === 'edit' ? 'block' : 'none';
+    document.getElementById('qtyConfirm').textContent   = mode === 'edit' ? 'Save' : 'Log It';
+    updateQtyTotal();
+    document.getElementById('qtyPanel').style.display = 'block';
+  }
+
+  function closeQtyPanel() {
+    document.getElementById('qtyPanel').style.display = 'none';
+    qtyMode = null; qtyPending = null; qtyEditId = null;
+  }
+
+  document.getElementById('qtyMinus').addEventListener('click', () => {
+    const inp = document.getElementById('qtyInput');
+    const v = Math.max(0.5, (parseFloat(inp.value)||1) - 0.5);
+    inp.value = v; updateQtyTotal();
+  });
+  document.getElementById('qtyPlus').addEventListener('click', () => {
+    const inp = document.getElementById('qtyInput');
+    inp.value = (parseFloat(inp.value)||1) + 0.5; updateQtyTotal();
+  });
+  document.getElementById('qtyInput').addEventListener('input', updateQtyTotal);
+
+  document.getElementById('qtyConfirm').addEventListener('click', () => {
+    if (!qtyPending) return;
+    const qty = parseFloat(document.getElementById('qtyInput').value) || 1;
+    const cal = Math.round(qtyPending.calPerUnit * qty);
+    const pro = Math.round(qtyPending.proPerUnit * qty);
+    if (qtyMode === 'edit') {
+      log = log.map(e => e.id === qtyEditId
+        ? { ...e, qty, cal, pro }
+        : e);
+    } else {
+      const newEntry = {
+        id: Date.now().toString(),
+        item: qtyPending.item,
+        meal: qtyPending.meal,
+        cal, pro, qty,
+        calPerUnit: qtyPending.calPerUnit,
+        proPerUnit: qtyPending.proPerUnit
+      };
+      log.push(newEntry);
+      if (saveNext) {
+        saved.push({...newEntry, id:(Date.now()+1).toString()});
+        saveNext = false;
+        document.getElementById('tog').classList.remove('on');
+        document.getElementById('togLabel').classList.remove('on');
+      }
+      document.getElementById('foodInput').value = '';
+    }
+    persist(); renderLog(); closeQtyPanel();
+  });
+
+  document.getElementById('qtyDelete').addEventListener('click', () => {
+    if (!qtyEditId) return;
+    log = log.filter(e => e.id !== qtyEditId);
+    persist(); renderLog(); closeQtyPanel();
+  });
+
+  document.getElementById('qtyCancel').addEventListener('click', closeQtyPanel);
+
+  // ── Entry rendering ──────────────────────────────────────────
   function entryHTML(e, isLog) {
     const c = COLORS[e.meal] || '#555';
+    const qtyLabel = e.qty && e.qty !== 1 ? ' ×' + e.qty : '';
     const meta = isLog
-      ? `<span style="color:${c}">${e.meal}</span> · ${e.cal} kcal · ${e.pro}g protein`
-      : `${e.cal} kcal · ${e.pro}g protein`;
+      ? '<span style="color:' + c + '">' + e.meal + '</span> · ' + e.cal + ' kcal · ' + e.pro + 'g protein'
+      : e.cal + ' kcal · ' + e.pro + 'g protein';
     const btns = isLog
-      ? `<button class="btn-save" title="Save to library" onclick="saveFromLog('${e.id}')">💾</button>
-         <button class="btn-remove" onclick="rmLog('${e.id}')">×</button>`
-      : `<button class="btn-save" onclick="logSaved('${e.id}')">+ LOG</button>
-         <button class="btn-remove" onclick="rmSaved('${e.id}')">×</button>`;
-    // tap entry name to copy into input
-    return `<div class="entry">
-      <div class="entry-bar" style="background:${c}"></div>
-      <div class="entry-info" onclick="copyToInput('${e.item.replace(/'/g,"&#39;")}')" style="cursor:pointer;">
-        <div class="entry-name">${e.item}</div>
-        <div class="entry-meta">${meta}</div>
-      </div>${btns}</div>`;
+      ? '<button class="btn-save" title="Save to library" onclick="saveFromLog(\'' + e.id + '\')">💾</button>'
+      : '<button class="btn-save" onclick="logSaved(\'' + e.id + '\')">+ LOG</button>' +
+        '<button class="btn-remove" onclick="rmSaved(\'' + e.id + '\')">×</button>';
+    const tapAttr = isLog
+      ? 'onclick="tapEntry(\'' + e.id + '\')" style="cursor:pointer;"'
+      : '';
+    return '<div class="entry">' +
+      '<div class="entry-bar" style="background:' + c + '"></div>' +
+      '<div class="entry-info" ' + tapAttr + '>' +
+        '<div class="entry-name">' + e.item + (qtyLabel ? '<span style="color:#555;font-size:12px;">' + qtyLabel + '</span>' : '') + '</div>' +
+        '<div class="entry-meta">' + meta + '</div>' +
+      '</div>' + btns + '</div>';
   }
 
   function renderLog() {
@@ -277,12 +372,12 @@
 
   function renderKey() {
     document.getElementById('keyArea').innerHTML = apiKey
-      ? `<div class="row"><div class="key-ok">✓ Key saved</div><button class="btn-text" onclick="rmKey()">Remove</button></div>`
-      : `<div class="row">
-           <input type="password" id="keyInp" placeholder="sk-ant-..." autocomplete="off" autocorrect="off"/>
-           <button class="btn-icon" id="eyeBtn" onclick="toggleEye()">👁</button>
-           <button class="btn-add" onclick="saveKey()">Save</button>
-         </div>`;
+      ? '<div class="row"><div class="key-ok">✓ Key saved</div><button class="btn-text" onclick="rmKey()">Remove</button></div>'
+      : '<div class="row">' +
+          '<input type="password" id="keyInp" placeholder="AIza..." autocomplete="off" autocorrect="off"/>' +
+          '<button class="btn-icon" id="eyeBtn" onclick="toggleEye()">👁</button>' +
+          '<button class="btn-add" onclick="saveKey()">Save</button>' +
+        '</div>';
   }
 
   function renderTargets() {
@@ -290,30 +385,36 @@
     document.getElementById('proTarget').value = proTgt;
   }
 
-  /* ---- Global actions ---- */
-  window.rmLog    = id => { log   = log.filter(e=>e.id!=id);   persist(); renderLog(); };
-  window.rmSaved  = id => { saved = saved.filter(e=>e.id!=id); persist(); renderSaved(); };
-  window.rmKey    = ()  => { apiKey=""; persist(); renderKey(); };
-  window.copyToInput = name => {
-    const inp = document.getElementById('foodInput');
-    inp.value = name;
-    inp.focus();
-    // scroll to top so input is visible
-    window.scrollTo({top:0, behavior:'smooth'});
+  // ── Global actions ───────────────────────────────────────────
+  window.tapEntry = id => {
+    const e = log.find(x=>x.id===id);
+    if (!e) return;
+    // If we have per-unit data use it; otherwise treat whole entry as 1 unit
+    const entry = {
+      item: e.item, meal: e.meal,
+      calPerUnit: e.calPerUnit || e.cal,
+      proPerUnit: e.proPerUnit || e.pro,
+      id: e.id
+    };
+    openQtyPanel('edit', entry, e.qty || 1);
   };
+  window.rmSaved    = id => { saved = saved.filter(e=>e.id!=id); persist(); renderSaved(); };
+  window.rmKey      = ()  => { apiKey=""; persist(); renderKey(); };
   window.saveFromLog = id => {
-    const it = log.find(e=>e.id==id);
-    if (!it) return;
-    if (saved.find(s=>s.item===it.item)) return; // already saved
+    const it = log.find(e=>e.id===id);
+    if (!it || saved.find(s=>s.item===it.item)) return;
     saved.push({...it, id:(Date.now()+1).toString()});
     persist(); renderSaved();
-    // brief visual feedback
-    const btns = document.querySelectorAll('.btn-save');
-    btns.forEach(b => { if(b.getAttribute('onclick')===`saveFromLog('${id}')`) { b.textContent='✓'; setTimeout(()=>b.textContent='💾',1200); }});
   };
-  window.logSaved = id  => {
-    const it = saved.find(e=>e.id==id);
-    if (it) { log.push({...it, id:Date.now().toString()}); persist(); renderLog(); }
+  window.logSaved = id => {
+    const it = saved.find(e=>e.id===id);
+    if (!it) return;
+    const entry = {
+      item: it.item, meal: it.meal,
+      calPerUnit: it.calPerUnit || it.cal,
+      proPerUnit: it.proPerUnit || it.pro
+    };
+    openQtyPanel('add', entry, it.qty || 1);
   };
   window.toggleEye = () => {
     const inp = document.getElementById('keyInp');
@@ -324,27 +425,17 @@
   };
   window.saveKey = () => {
     const v = (document.getElementById('keyInp')?.value||'').trim();
-    if (!v) return;
-    apiKey=v; persist(); renderKey();
+    if (!v) return; apiKey=v; persist(); renderKey();
   };
 
-  /* ---- Targets ---- */
-  document.getElementById('saveTargets').addEventListener('click', () => {
-    const c = parseInt(document.getElementById('calTarget').value);
-    const p = parseInt(document.getElementById('proTarget').value);
-    if (c>0) calTgt=c;
-    if (p>0) proTgt=p;
-    persist(); renderGauges();
-  });
-
-  /* ---- Toggle ---- */
+  // ── Toggle ───────────────────────────────────────────────────
   document.getElementById('togRow').addEventListener('click', () => {
     saveNext = !saveNext;
     document.getElementById('tog').classList.toggle('on', saveNext);
     document.getElementById('togLabel').classList.toggle('on', saveNext);
   });
 
-  /* ---- Reset ---- */
+  // ── Reset ────────────────────────────────────────────────────
   document.getElementById('resetBtn').addEventListener('click', () => {
     if (!resetConfirm) {
       resetConfirm=true;
@@ -357,49 +448,44 @@
       },3000);
       return;
     }
-    clearTimeout(resetTimer);
-    resetConfirm=false; log=[];
-    persist(); renderLog();
+    clearTimeout(resetTimer); resetConfirm=false; log=[];
+    persist(); renderLog(); closeQtyPanel();
     document.getElementById('resetBtn').textContent='NEW CYCLE';
     document.getElementById('resetBtn').classList.remove('confirm');
   });
 
-  /* ---- Tabs ---- */
+  // ── Targets ──────────────────────────────────────────────────
+  document.getElementById('saveTargets').addEventListener('click', () => {
+    const c = parseInt(document.getElementById('calTarget').value);
+    const p = parseInt(document.getElementById('proTarget').value);
+    if (c>0) calTgt=c; if (p>0) proTgt=p;
+    persist(); renderGauges();
+  });
+
+  // ── Tabs ─────────────────────────────────────────────────────
   document.querySelectorAll('.tab').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       ['log','saved','settings'].forEach(t => {
-        document.getElementById(`tab-${t}`).style.display = t===btn.dataset.tab ? 'block' : 'none';
+        document.getElementById('tab-'+t).style.display = t===btn.dataset.tab ? 'block' : 'none';
       });
     });
   });
 
-  /* ---- Add food ---- */
+  // ── Add food (text) ──────────────────────────────────────────
   async function addFood() {
     const inp = document.getElementById('foodInput');
     const text = inp.value.trim();
     if (!text || loading) return;
-    if (!apiKey) {
-      showErr("Add your Anthropic API key in Settings first.");
-      document.querySelector('[data-tab="settings"]').click();
-      return;
-    }
+    if (!apiKey) { showErr("Add your Gemini API key in Settings first."); document.querySelector('[data-tab="settings"]').click(); return; }
     loading=true;
     const btn=document.getElementById('addBtn');
     btn.disabled=true; btn.textContent='...';
     hideErr();
     try {
-      const entry = await parseFood(text);
-      log.push({...entry, id:Date.now().toString()});
-      if (saveNext) {
-        saved.push({...entry, id:(Date.now()+1).toString()});
-        saveNext=false;
-        document.getElementById('tog').classList.remove('on');
-        document.getElementById('togLabel').classList.remove('on');
-      }
-      inp.value='';
-      persist(); renderLog();
+      const parsed = await parseFood(text);
+      openQtyPanel('add', parsed, parsed.qty || 1);
     } catch(e) { showErr(e.message); }
     loading=false; btn.disabled=false; btn.textContent='+ Add';
   }
@@ -407,9 +493,7 @@
   document.getElementById('addBtn').addEventListener('click', addFood);
   document.getElementById('foodInput').addEventListener('keydown', e => { if(e.key==='Enter') addFood(); });
 
-  // Camera / label scanning
-  let pendingLabelEntry = null;
-
+  // ── Camera / label scanning ──────────────────────────────────
   document.getElementById('camBtn').addEventListener('click', () => {
     document.getElementById('photoInput').click();
   });
@@ -424,42 +508,10 @@
     try {
       const base64 = await fileToBase64(file);
       const result = await parseLabelImage(base64, file.type);
-      pendingLabelEntry = result;
-      document.getElementById('servingInfo').innerHTML =
-        '<strong style="color:#eee;">' + result.item + '</strong><br>' +
-        'Per serving: <span style="color:#f4a261;">' + result.calPerServing + ' kcal</span> · <span style="color:#52b788;">' + result.proPerServing + 'g protein</span>';
-      document.getElementById('servingCount').value = '1';
-      document.getElementById('servingOverlay').style.display = 'block';
+      openQtyPanel('add', result, 1);
     } catch(e) { showErr(e.message); }
     camBtn.textContent = '📷'; camBtn.disabled = false;
     this.value = '';
-  });
-
-  document.getElementById('confirmServing').addEventListener('click', () => {
-    if (!pendingLabelEntry) return;
-    const servings = parseFloat(document.getElementById('servingCount').value) || 1;
-    const entry = {
-      item: pendingLabelEntry.item,
-      meal: pendingLabelEntry.meal,
-      cal: Math.round(pendingLabelEntry.calPerServing * servings),
-      pro: Math.round(pendingLabelEntry.proPerServing * servings),
-      id: Date.now().toString()
-    };
-    log.push(entry);
-    if (saveNext) {
-      saved.push({...entry, id:(Date.now()+1).toString()});
-      saveNext=false;
-      document.getElementById('tog').classList.remove('on');
-      document.getElementById('togLabel').classList.remove('on');
-    }
-    persist(); renderLog();
-    document.getElementById('servingOverlay').style.display = 'none';
-    pendingLabelEntry = null;
-  });
-
-  document.getElementById('cancelServing').addEventListener('click', () => {
-    document.getElementById('servingOverlay').style.display = 'none';
-    pendingLabelEntry = null;
   });
 
   function fileToBase64(file) {
@@ -471,72 +523,57 @@
     });
   }
 
-  async function parseLabelImage(base64, mimeType) {
-    const prompt = 'This is a nutrition label. Extract the information and respond with ONLY raw JSON, no markdown, no backticks. Format: {"item":"product name","meal":"Snack","calPerServing":number,"proPerServing":number} calPerServing = calories per serving as integer. proPerServing = protein grams per serving as integer. meal should be your best guess: Breakfast|Lunch|Dinner|Snack|Drink|Treat. If you cannot read a nutrition label in this image, respond: {"error":"No nutrition label found"}';
+  function showErr(msg) { const e=document.getElementById('errMsg'); e.textContent='⚠ '+msg; e.style.display='block'; }
+  function hideErr()    { document.getElementById('errMsg').style.display='none'; }
+
+  // ── Gemini API calls ─────────────────────────────────────────
+  async function geminiCall(parts) {
     const res = await fetch(
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=' + apiKey,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [
-            { text: prompt },
-            { inline_data: { mime_type: mimeType, data: base64 } }
-          ]}],
+          contents: [{ parts }],
           generationConfig: { temperature: 0.1, maxOutputTokens: 200 }
         })
       }
     );
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err?.error?.message || 'API error ' + res.status);
-    }
+    if (!res.ok) { const err=await res.json(); throw new Error(err?.error?.message||'API error '+res.status); }
     const data = await res.json();
     const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const match = raw.match(/\{[\s\S]*?\}/);
     if (!match) throw new Error('Unexpected: ' + raw.slice(0,80));
-    const parsed = JSON.parse(match[0]);
-    if (parsed.error) throw new Error(parsed.error);
-    if (!parsed.item || typeof parsed.calPerServing !== 'number') throw new Error('Could not read label');
-    if (!['Breakfast','Lunch','Dinner','Snack','Drink','Treat'].includes(parsed.meal)) parsed.meal = 'Snack';
+    return JSON.parse(match[0]);
+  }
+
+  async function parseFood(text) {
+    const prompt = 'Nutrition estimator. Respond with ONLY raw JSON, no markdown, no backticks.' +
+      ' Detect the quantity (e.g. "3 eggs" → qty:3, per-egg nutrition). For uncountable foods use qty:1.' +
+      ' Format: {"meal":"Breakfast","item":"clean name","qty":number,"calPerUnit":number,"proPerUnit":number}' +
+      ' meal: Breakfast|Lunch|Dinner|Snack|Drink|Treat. calPerUnit=calories per single unit. proPerUnit=protein grams per unit.' +
+      ' Food: ' + text;
+    const parsed = await geminiCall([{ text: prompt }]);
+    if (!parsed.item || typeof parsed.calPerUnit !== 'number') throw new Error('Bad response');
+    if (!['Breakfast','Lunch','Dinner','Snack','Drink','Treat'].includes(parsed.meal)) parsed.meal='Snack';
+    if (!parsed.qty || parsed.qty <= 0) parsed.qty = 1;
     return parsed;
   }
 
-  function showErr(msg) { const e=document.getElementById('errMsg'); e.textContent='⚠ '+msg; e.style.display='block'; }
-  function hideErr()    { document.getElementById('errMsg').style.display='none'; }
-
-  /* ---- Gemini 2.5 Flash Lite ---- */
-  async function parseFood(text) {
-    const prompt = `Nutrition estimator. Given a food description respond with ONLY raw JSON, no markdown, no backticks.
-Format: {"meal":"Breakfast","item":"clean name","cal":number,"pro":number}
-meal: Breakfast|Lunch|Dinner|Snack|Drink|Treat. cal=calories integer. pro=protein grams integer.
-Food: ${text}`;
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.1, maxOutputTokens: 200 }
-        })
-      }
-    );
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err?.error?.message || `API error ${res.status}`);
-    }
-    const data = await res.json();
-    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const match = raw.match(/\{[\s\S]*?\}/);
-    if (!match) throw new Error(`Unexpected: ${raw.slice(0,80)}`);
-    const parsed = JSON.parse(match[0]);
-    if (!parsed.item || typeof parsed.cal!=='number' || typeof parsed.pro!=='number') throw new Error('Bad response');
+  async function parseLabelImage(base64, mimeType) {
+    const prompt = 'This is a nutrition label. Respond with ONLY raw JSON, no markdown, no backticks.' +
+      ' Format: {"item":"product name","meal":"Snack","calPerUnit":number,"proPerUnit":number}' +
+      ' calPerUnit=calories per serving. proPerUnit=protein grams per serving.' +
+      ' meal: Breakfast|Lunch|Dinner|Snack|Drink|Treat.' +
+      ' If no nutrition label visible respond: {"error":"No nutrition label found"}';
+    const parsed = await geminiCall([{ text: prompt }, { inline_data: { mime_type: mimeType, data: base64 } }]);
+    if (parsed.error) throw new Error(parsed.error);
+    if (!parsed.item || typeof parsed.calPerUnit !== 'number') throw new Error('Could not read label');
     if (!['Breakfast','Lunch','Dinner','Snack','Drink','Treat'].includes(parsed.meal)) parsed.meal='Snack';
     return parsed;
   }
 
-  /* ---- Init ---- */
+  // ── Init ─────────────────────────────────────────────────────
   renderLog(); renderSaved(); renderKey(); renderTargets();
 </script>
 </body>
