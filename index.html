@@ -19,7 +19,7 @@
       min-height: -webkit-fill-available;
       padding-bottom: env(safe-area-inset-bottom);
     }
-    .wrap { max-width: 480px; margin: 0 auto; padding: 52px 16px 80px; }
+    .wrap { max-width: 480px; margin: 0 auto; padding: 28px 12px 60px; }
 
     /* Header */
     .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; }
@@ -34,7 +34,7 @@
     .new-cycle-btn.confirm { border-color: #ff6b6b; color: #ff6b6b; background: #ff6b6b18; }
 
     /* Cards */
-    .card { background: #111; border-radius: 16px; padding: 20px; border: 1px solid #1e1e1e; margin-bottom: 14px; }
+    .card { background: #111; border-radius: 16px; padding: 16px; border: 1px solid #1e1e1e; margin-bottom: 12px; }
 
     /* Gauges */
     .gauge { margin-bottom: 22px; }
@@ -138,15 +138,15 @@
     </div>
     <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;"/>
     <!-- Unified confirm / edit panel -->
-    <div id="qtyPanel" style="display:none;background:#181818;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:10px;">
+    <div id="qtyPanel" style="display:none;background:#181818;border:1px solid #2a2a2a;border-radius:12px;padding:14px;margin-bottom:10px;overflow:hidden;">
       <div id="qtyPanelLabel" style="font-family:monospace;font-size:10px;letter-spacing:3px;color:#555;margin-bottom:10px;">CONFIRM</div>
       <div id="qtyItemName" style="font-size:15px;color:#eee;font-weight:500;margin-bottom:4px;"></div>
       <div id="qtyPerUnit" style="font-size:11px;color:#555;font-family:monospace;margin-bottom:14px;"></div>
       <div style="font-family:monospace;font-size:11px;color:#666;margin-bottom:8px;">QUANTITY</div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-        <button id="qtyMinus" style="background:#111;border:1px solid #333;border-radius:10px;width:44px;height:44px;color:#eee;font-size:22px;cursor:pointer;flex-shrink:0;line-height:1;">−</button>
-        <input type="number" id="qtyInput" value="1" min="0.1" step="0.5" style="font-family:monospace;font-size:18px;text-align:center;flex:1;padding:10px;"/>
-        <button id="qtyPlus" style="background:#111;border:1px solid #333;border-radius:10px;width:44px;height:44px;color:#eee;font-size:22px;cursor:pointer;flex-shrink:0;line-height:1;">+</button>
+        <button id="qtyMinus" style="background:#111;border:1px solid #333;border-radius:10px;width:40px;height:40px;color:#eee;font-size:20px;cursor:pointer;flex-shrink:0;line-height:1;">−</button>
+        <input type="number" id="qtyInput" value="1" min="0.1" step="0.5" style="font-family:monospace;font-size:16px;text-align:center;flex:1;padding:8px;min-width:0;"/>
+        <button id="qtyPlus" style="background:#111;border:1px solid #333;border-radius:10px;width:40px;height:40px;color:#eee;font-size:20px;cursor:pointer;flex-shrink:0;line-height:1;">+</button>
       </div>
       <div id="qtyTotal" style="font-family:monospace;font-size:13px;color:#888;margin-bottom:14px;text-align:center;"></div>
       <div style="display:flex;gap:8px;">
